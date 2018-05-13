@@ -45,7 +45,7 @@ var stringifyJSON = function(obj) {
       //push to array
       keyValStore.push('"' + key + '":' + val);
     }
-    //return joined array with curly braces wrapped
+    //return joined array wrapped with curly braces
     return '{' + keyValStore.join(',') + '}';
   } else {
     return typeof obj === 'string' ? '"' + obj + '"' : '' + obj;
