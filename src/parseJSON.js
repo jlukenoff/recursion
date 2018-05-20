@@ -1,7 +1,3 @@
-let input = '["\\\\\\"\\"a\\""]';
-
-
-
 // this is what you would do if you were one to do things the easy way:
 // var parseJSON = JSON.parse;
 
@@ -14,7 +10,7 @@ var parseJSON = function(json) {
   //convert strings with quotes and other types into primitive type or plain string
   function convertToPrimitive(str) {
     if (typeof str === 'object') return str;
-    str = str.trim()
+    str = str.trim();
     if (str === 'true') {
       return true;
     } else if (str === 'false') {
@@ -32,10 +28,16 @@ var parseJSON = function(json) {
     }
   }
 
+  //handles strings with escape characters
+  function escapeHandler(string) {
+    let escapeCounter = 0;
+    for (let i = 0; i < string.length; i++) {
+    }
+  }
 
-  //extractss nested json object string when passed a string slice starting at the opening brace
+
+  //extracts nested json object string when passed a string slice starting at the opening brace
   function objExtractor(json) {
-
     let closeBrace = json[0] === '[' ? ']' : '}';
     let openBrace = json[0];
     let braces = 0;
@@ -113,10 +115,19 @@ var parseJSON = function(json) {
     let str = '';
     json = trimEnds(json);
     for (let i = 0; i < json.length; i++) {
-      let char = json[i];//?
-      if (char === '"') {
+      let char = json[i];
+      if (char === '\\' && inString) {
+        str += json[i + 1];
+        i++;
+        if (i === json.length - 1) throw(SyntaxError());
+      } else if (char === '"') {
         inString ? inString = false : inString = true;
-        if (i === json.length - 1) newArr.push(convertToPrimitive(str));
+        if (i === json.length - 1 && str.search(/\\/) === -1) {
+          newArr.push(convertToPrimitive(str));
+        } else if (i === json.length - 1) {
+          if (str.endsWith('\\')) throw(SyntaxError());
+          newArr.push(str);
+        }
 
       } else if (char === '{' || char === '[') {
         newArr.push(parseJSON(objExtractor(json.slice(i))));
@@ -147,7 +158,6 @@ var parseJSON = function(json) {
 
   //---Control Flow---//
 
-  // if (json.search(/\\/) !== -1) throw(SyntaxError());
   if (json.startsWith('[')) {
     if (!json.endsWith(']')) {
       throw(SyntaxError());
@@ -159,13 +169,7 @@ var parseJSON = function(json) {
     let output =  renderOutputObj(keyValSort(json));
     return output;
   }
-};
-
-let actual = parseJSON(input)
-let expected = JSON.parse(input);
-
-actual;
-expected;
+};       
 
 
 
