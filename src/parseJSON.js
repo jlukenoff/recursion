@@ -14,7 +14,7 @@ var parseJSON = function (json) {
 //---Helper Functions---//
 
 //extracts keys and their respective values into separate arrays from a json string
-function keyValSort(json) {
+const keyValSort = function(json) {
   json = trimEnds(json);
   let newObj = {
     keys: [],
@@ -52,10 +52,10 @@ function keyValSort(json) {
     }
   }
   return newObj;
-}
+};
 
 //returns an array from a json array string
-function parseArray(json) {
+const parseArray = function(json) {
   let inString = false;
   let newArr = [];
   let str = '';
@@ -87,10 +87,10 @@ function parseArray(json) {
 
   }
   return newArr;
-}
+};
 
 //extracts nested json object string when passed a string slice starting at the opening brace
-function objExtractor(json) {
+const objExtractor = function(json) {
   let closeBrace = json[0] === '[' ? ']' : '}';
   let openBrace = json[0];
   let braces = 0;
@@ -105,19 +105,19 @@ function objExtractor(json) {
       return output;
     }
   }
-}
+};
 
 //renders final object from keyValSort output
-function renderOutputObj(obj) {
+const renderOutputObj = function(obj) {
   let newObj = {};
   obj.keys.forEach(function (key, i) {
     newObj[convertToPrimitive(key)] = convertToPrimitive(obj.values[i]);
   });
   return newObj;
-}
+};
 
 //convert strings with quotes and other types into primitive type or plain string
-function convertToPrimitive(str) {
+const convertToPrimitive = function(str) {
   if (typeof str === 'object') return str;
   str = str.trim();
   if (str === 'true') {
@@ -130,12 +130,12 @@ function convertToPrimitive(str) {
     return Number(str);
   }
   return str;
-}
+};
 
-//returns a string with first and last characted removed
-function trimEnds(str) {
+//returns a given string with first and last characted removed
+const trimEnds = function(str) {
   return str.slice(1, str.length - 1);
-}
+};
 
 
 
